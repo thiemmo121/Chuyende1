@@ -1,76 +1,79 @@
-@extends('layouts.app')
-
-@section('title', 'Quản lý sản phẩm')
+@extends('layouts.master')
 
 @section('content')
-    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-        <div>
-            <h2 class="mb-1">Quản lý sản phẩm</h2>
-            <p class="text-muted mb-0">Tìm kiếm theo tên, xem trạng thái tồn kho và thao tác cập nhật/xóa.</p>
-        </div>
-        <a href="{{ route('products.create') }}" class="btn btn-success">Thêm sản phẩm</a>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Danh sách sản phẩm</h2>
+        <a href="{{ route('products.create') }}" class="btn btn-primary">+ Thêm sản phẩm mới</a>
     </div>
 
-    <div class="card section-card mb-4">
+    <div class="card mb-4 shadow-sm">
         <div class="card-body">
-            <form method="GET" action="{{ route('products.index') }}" class="row g-3 align-items-end">
-                <div class="col-md-9">
-                    <label class="form-label">Tìm theo tên</label>
-                    <input type="text" name="search" value="{{ $search }}" class="form-control" placeholder="Nhập tên sản phẩm">
+            <form action="{{ route('products.index') }}" method="GET" class="row g-3">
+                <div class="col-md-5">
+                    <input type="text" name="search" class="form-control" placeholder="Nhập tên sản phẩm cần tìm..." value="{{ request('search') }}">
                 </div>
+
+                <div class="col-md-4">
+                    <select name="sort" class="form-select">
+    <option value="">-- Sắp xếp theo giá --</option>
+    <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Giá tăng dần</option>
+    <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Giá giảm dần</option>
+</select>
+                </div>
+
                 <div class="col-md-3 d-flex gap-2">
-                    <button class="btn btn-primary w-100" type="submit">Tìm kiếm</button>
-                    <a href="{{ route('products.index') }}" class="btn btn-outline-secondary w-100">Xóa</a>
+                    <button type="submit" class="btn btn-secondary w-100">Lọc dữ liệu</button>
+                    <a href="{{ route('products.index') }}" class="btn btn-outline-secondary w-100">Xóa lọc</a>
                 </div>
             </form>
         </div>
     </div>
+    <table class="table table-bordered align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Ảnh</th> <th>Tên sản phẩm</th>
+                <th>Giá</th>
+                <th>Danh mục</th>
+                <th>Số lượng</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th> 
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($products as $product)
+            <tr>
+                <td>
+                    @if($product->image)
+                        <img src="{{ asset('storage/' . $product->image) }}" width="60" class="img-thumbnail">
+                    @else
+                        <span class="text-muted">No image</span>
+                    @endif
+                </td>
+                <td>{{ $product->name }}</td>
+                <td>{{ number_format($product->price, 0, ',', '.') }} đ</td>
+                <td>{{ $product->category->name ?? 'N/A' }}</td> <td>{{ $product->quantity }}</td>
+                <td>
+                    <span class="badge {{ $product->stock_badge_class }}">
+                        {{ $product->stock_label }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm btn-warning">Sửa</a>
 
-    <div class="card section-card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>#</th>
-                            <th>Tên</th>
-                            <th>Giá</th>
-                            <th>Số lượng</th>
-                            <th>Danh mục</th>
-                            <th>Trạng thái</th>
-                            <th class="text-end">Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($products as $product)
-                            <tr>
-                                <td>{{ $product->id }}</td>
-                                <td class="fw-semibold">{{ $product->name }}</td>
-                                <td>{{ number_format($product->price, 0, ',', '.') }}</td>
-                                <td>{{ $product->quantity }}</td>
-                                <td>{{ $product->category }}</td>
-                                <td><span class="badge {{ $product->stock_badge_class }}">{{ $product->stock_label }}</span></td>
-                                <td class="text-end">
-                                    <a href="{{ route('products.edit', $product) }}" class="btn btn-sm btn-outline-primary">Cập nhật</a>
-                                    <form action="{{ route('products.destroy', $product) }}" method="POST" class="d-inline" onsubmit="return confirm('Xóa sản phẩm này?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-outline-danger">Xóa</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center text-muted py-4">Chưa có sản phẩm nào.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+                    <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 
-            <div class="mt-3">
-                {{ $products->links() }}
-            </div>
-        </div>
+    <div class="d-flex justify-content-center mt-3">
+        {{ $products->links() }}
     </div>
+</div>
 @endsection

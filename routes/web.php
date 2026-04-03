@@ -10,6 +10,7 @@ use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 
+
 Route::get('/employees/create', [EmployeeController::class, 'create'])->name('employees.create');
 Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
 Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
@@ -21,6 +22,15 @@ Route::prefix('students')->name('students.')->group(function () {
 });
 
 Route::resource('products', ProductController::class)->except(['show']);
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+    // Sửa sản phẩm
+    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
+    // Route cho trang Dashboard
+Route::get('/dashboard', [ProductController::class, 'dashboard'])->name('dashboard');
+// Xóa sản phẩm
+Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 
 Route::prefix('courses')->name('courses.')->group(function () {
     Route::get('/', [CourseController::class, 'index'])->name('index');

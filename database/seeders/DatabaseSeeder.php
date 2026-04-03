@@ -8,7 +8,7 @@ use App\Models\Customer;
 use App\Models\Enrollment;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Models\Product;
+use App\Models\Product; // Dòng này có thể giữ lại hoặc xóa nếu không dùng Product trực tiếp ở đây
 use App\Models\Student;
 use Illuminate\Database\Seeder;
 
@@ -16,21 +16,21 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // 1. Giữ lại các phần nạp dữ liệu khác nếu bạn cần
         Student::insert([
             ['name' => 'Nguyen Van A', 'major' => 'Cong nghe thong tin', 'email' => 'a@example.com', 'created_at' => now(), 'updated_at' => now()],
             ['name' => 'Tran Thi B', 'major' => 'Ke toan', 'email' => 'b@example.com', 'created_at' => now(), 'updated_at' => now()],
             ['name' => 'Le Van C', 'major' => 'Quan tri kinh doanh', 'email' => 'c@example.com', 'created_at' => now(), 'updated_at' => now()],
         ]);
-    $this->call([
-    DepartmentSeeder::class,
-    EmployeeSeeder::class,
-]);
-        Product::insert([
-            ['name' => 'Ban phim co', 'price' => 450000, 'quantity' => 12, 'category' => 'Phu kien', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Chuot khong day', 'price' => 250000, 'quantity' => 3, 'category' => 'Phu kien', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Laptop Dell', 'price' => 18500000, 'quantity' => 0, 'category' => 'May tinh', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Tai nghe', 'price' => 180000, 'quantity' => 7, 'category' => 'Am thanh', 'created_at' => now(), 'updated_at' => now()],
+
+        // 2. Gọi các Seeder riêng biệt
+        $this->call([
+            DepartmentSeeder::class,
+            EmployeeSeeder::class,
+            StoreSeeder::class, // Dữ liệu Product và Category chuẩn sẽ nằm ở đây
         ]);
+
+        // ĐÃ XÓA ĐOẠN Product::insert LỖI TẠI ĐÂY (Vì nó dùng cột 'category' sai)
 
         Course::insert([
             ['name' => 'Lap trinh Web', 'credits' => 3, 'created_at' => now(), 'updated_at' => now()],
@@ -45,16 +45,10 @@ class DatabaseSeeder extends Seeder
             ['student_id' => 3, 'course_id' => 3, 'created_at' => now(), 'updated_at' => now()],
         ]);
 
+        // Các phần Order, OrderItem, Customer, Appointment giữ nguyên...
         Order::insert([
             ['customer_name' => 'Pham Van D', 'status' => 'pending', 'total_amount' => 1150000, 'created_at' => now(), 'updated_at' => now()],
             ['customer_name' => 'Tran Thi E', 'status' => 'processing', 'total_amount' => 18680000, 'created_at' => now(), 'updated_at' => now()],
-        ]);
-
-        OrderItem::insert([
-            ['order_id' => 1, 'product_id' => 1, 'product_name' => 'Ban phim co', 'unit_price' => 450000, 'quantity' => 2, 'line_total' => 900000, 'created_at' => now(), 'updated_at' => now()],
-            ['order_id' => 1, 'product_id' => 4, 'product_name' => 'Tai nghe', 'unit_price' => 180000, 'quantity' => 1, 'line_total' => 180000, 'created_at' => now(), 'updated_at' => now()],
-            ['order_id' => 2, 'product_id' => 3, 'product_name' => 'Laptop Dell', 'unit_price' => 18500000, 'quantity' => 1, 'line_total' => 18500000, 'created_at' => now(), 'updated_at' => now()],
-            ['order_id' => 2, 'product_id' => 2, 'product_name' => 'Chuot khong day', 'unit_price' => 250000, 'quantity' => 1, 'line_total' => 250000, 'created_at' => now(), 'updated_at' => now()],
         ]);
 
         Customer::insert([

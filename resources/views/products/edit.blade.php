@@ -1,39 +1,44 @@
-@extends('layouts.app')
-
-@section('title', 'Cập nhật sản phẩm')
-
-@section('content')
-    <div class="mb-4">
-        <h2 class="mb-1">Cập nhật sản phẩm</h2>
-        <p class="text-muted mb-0">Thay đổi thông tin và số lượng tồn kho.</p>
-    </div>
-
-    <div class="card section-card">
-        <div class="card-body">
-            <form method="POST" action="{{ route('products.update', $product) }}" class="row g-3">
-                @csrf
-                @method('PUT')
-                <div class="col-md-6">
-                    <label class="form-label">Tên</label>
-                    <input type="text" name="name" value="{{ old('name', $product->name) }}" class="form-control" required>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Danh mục</label>
-                    <input type="text" name="category" value="{{ old('category', $product->category) }}" class="form-control" required>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Giá</label>
-                    <input type="number" name="price" step="0.01" min="0" value="{{ old('price', $product->price) }}" class="form-control" required>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Số lượng</label>
-                    <input type="number" name="quantity" min="0" value="{{ old('quantity', $product->quantity) }}" class="form-control" required>
-                </div>
-                <div class="col-12 d-flex gap-2">
-                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                    <a href="{{ route('products.index') }}" class="btn btn-outline-secondary">Quay lại</a>
-                </div>
-            </form>
+@extends('layouts.master') @section('content')
+<div class="container mt-4">
+    <h2>Chỉnh sửa sản phẩm</h2>
+    <form action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT') <div class="mb-3">
+            <label>Tên sản phẩm</label>
+            <input type="text" name="name" value="{{ $product->name }}" class="form-control" required>
         </div>
-    </div>
+
+        <div class="mb-3">
+            <label>Giá</label>
+            <input type="number" name="price" value="{{ $product->price }}" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Số lượng</label>
+            <input type="number" name="quantity" value="{{ $product->quantity }}" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Danh mục</label>
+            <select name="category_id" class="form-control">
+                @foreach($categories as $cat)
+                    <option value="{{ $cat->id }}" {{ $product->category_id == $cat->id ? 'selected' : '' }}>
+                        {{ $cat->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Ảnh sản phẩm</label>
+            <input type="file" name="image" class="form-control">
+            @if($product->image)
+                <img src="{{ asset('storage/'.$product->image) }}" width="100" class="mt-2">
+            @endif
+        </div>
+
+        <button type="submit" class="btn btn-warning">Cập nhật</button>
+        <a href="{{ route('products.index') }}" class="btn btn-secondary">Quay lại</a>
+    </form>
+</div>
 @endsection

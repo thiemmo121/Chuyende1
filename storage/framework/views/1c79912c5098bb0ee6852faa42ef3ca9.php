@@ -10,20 +10,21 @@
         <div class="container">
             <h1 class="h3">Hệ thống Quản lý Sản phẩm</h1>
             <nav class="nav">
-                <a class="nav-link text-white" href="{{ route('dashboard') }}">Dashboard</a>
-                <a class="nav-link text-white" href="{{ route('products.index') }}">Sản phẩm</a>
+                <a class="nav-link text-white" href="<?php echo e(route('dashboard')); ?>">Dashboard</a>
+                <a class="nav-link text-white" href="<?php echo e(route('products.index')); ?>">Sản phẩm</a>
             </nav>
         </div>
     </header>
 
     <div class="container">
-        @if(session('success'))
+        <?php if(session('success')): ?>
             <div class="alert alert-success alert-dismissible fade show">
-                {{ session('success') }}
+                <?php echo e(session('success')); ?>
+
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        @endif
+        <?php endif; ?>
 
-        @yield('content') </div>
+        <?php echo $__env->yieldContent('content'); ?> </div>
 </body>
-</html>
+</html><?php /**PATH E:\Quàng Văn Thiếm_20221002_Bài thực hành chương 3-1\resources\views/layouts/master.blade.php ENDPATH**/ ?>
