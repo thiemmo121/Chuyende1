@@ -21,7 +21,10 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Tran Thi B', 'major' => 'Ke toan', 'email' => 'b@example.com', 'created_at' => now(), 'updated_at' => now()],
             ['name' => 'Le Van C', 'major' => 'Quan tri kinh doanh', 'email' => 'c@example.com', 'created_at' => now(), 'updated_at' => now()],
         ]);
-
+    $this->call([
+    DepartmentSeeder::class,
+    EmployeeSeeder::class,
+]);
         Product::insert([
             ['name' => 'Ban phim co', 'price' => 450000, 'quantity' => 12, 'category' => 'Phu kien', 'created_at' => now(), 'updated_at' => now()],
             ['name' => 'Chuot khong day', 'price' => 250000, 'quantity' => 3, 'category' => 'Phu kien', 'created_at' => now(), 'updated_at' => now()],

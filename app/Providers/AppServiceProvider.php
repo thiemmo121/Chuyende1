@@ -2,17 +2,18 @@
 
 namespace App\Providers;
 
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\Paginator; // 1. Thêm dòng này
 
 class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        //
     }
 
     public function boot(): void
     {
-        Paginator::useBootstrapFive();
+        Paginator::useBootstrapFive(); // 2. Thêm dòng này để dùng giao diện Bootstrap 5
     }
 }

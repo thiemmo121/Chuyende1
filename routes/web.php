@@ -8,7 +8,11 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EmployeeController;
 
+Route::get('/employees/create', [EmployeeController::class, 'create'])->name('employees.create');
+Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
+Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::prefix('students')->name('students.')->group(function () {
